@@ -16,6 +16,7 @@ const taklifId = -462312137;
 
 const groups = [-330348762, -453604980, -462312137];
 
+
 function getNewId() {
   zayavaId++;
   return zayavaId;
