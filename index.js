@@ -33,7 +33,6 @@ bot.onText(/\/start/, (message) => {
 });
 
 bot.on('message', (message) => {
-  console.log('message', message)
   const { from, text, chat } = message;
   if (text === '/start') {
     return;
