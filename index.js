@@ -23,8 +23,16 @@ function getNewId() {
 }
 
 bot.on('polling_error', (err) => {
-  console.log('err', err);
+  console.log('polling err', err);
 });
+
+bot.on('error', (err) => {
+  console.log('error', err)
+})
+
+bot.on('webhook_error', (err) => {
+  console.log('webhook error', err)
+})
 
 bot.onText(/\/start/, (message) => {
   const { from, chat } = message;
