@@ -12,7 +12,7 @@ const zayavas = [];
 let zayavaId = 0;
 const murojatId = -1001341159263;
 const tekshiruvId = -453604980;
-const taklifId = -462312137;
+const taklifId = -1001477546435;
 
 const groups = [-330348762, -453604980, -462312137];
 
