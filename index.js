@@ -14,7 +14,7 @@ const murojatId = -1001341159263;
 const tekshiruvId = -1001157883441;
 const taklifId = -1001477546435;
 
-const groups = [-330348762, -453604980, -462312137];
+const groups = [-1001341159263, -1001157883441, -1001477546435];
 
 function getNewId() {
   zayavaId++;
