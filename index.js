@@ -3,7 +3,7 @@ const TelegramBot = require('node-telegram-bot-api');
 //const token = '1226686352:AAGXgslJ17kgH0DWFvyGYkfi4JklXGFNOII';
 const token = '728371112:AAETpJWsXZNppuX2oWxlR0gJccNIlshWw3M';
 
-const { typeChoose, chooseInfo, chooseBtn, chooseFormTitle } = require('./localization');
+const { typeChoose, chooseInfo, chooseBtn, chooseFormTitle, regions } = require('./localization');
 
 const bot = new TelegramBot(token, { polling: true });
 let users = [];
@@ -16,7 +16,6 @@ const taklifId = -1001477546435;
 
 const groups = [-330348762, -453604980, -462312137];
 
-
 function getNewId() {
   zayavaId++;
   return zayavaId;
@@ -27,12 +26,12 @@ bot.on('polling_error', (err) => {
 });
 
 bot.on('error', (err) => {
-  console.log('error', err)
-})
+  console.log('error', err);
+});
 
 bot.on('webhook_error', (err) => {
-  console.log('webhook error', err)
-})
+  console.log('webhook error', err);
+});
 
 bot.onText(/\/start/, (message) => {
   const { from, chat } = message;
@@ -78,11 +77,6 @@ bot.on('message', (message) => {
     return;
   }
 
-  if (user.step === 'INN') {
-    onInnSend(from.id, text);
-    return;
-  }
-
   if (user.step === 'Zayava') {
     onZayavaSend(from.id, text, message.date);
     return;
@@ -111,24 +105,37 @@ bot.on('callback_query', function (msg) {
     bot.sendMessage(chatId, chooseBtn[lang]['name']);
   }
 
-  if (msg.data.startsWith('Confirm')) {
-    const { id } = msg.from
-    const [text, chatId] = msg.data.split('==')
-    const user = users.find(v => v.id === id)
+  if (msg.data.startsWith('Region')) {
+    const [text, region] = msg.data.split('==')
+    const { from } = msg
 
-    if (!user || user.step !== 'Confirm') {
+    const user = users.find(v => v.id === from.id)
+
+    if (!user || user.step !== 'Region') {
       return
     }
 
-    onConfirm(user.id)
+    onRegionSend(user.id, region)
+  }
+
+  if (msg.data.startsWith('Confirm')) {
+    const { id } = msg.from;
+    const [text, chatId] = msg.data.split('==');
+    const user = users.find((v) => v.id === id);
+
+    if (!user || user.step !== 'Confirm') {
+      return;
+    }
+
+    onConfirm(user.id);
   }
 
   if (msg.data.startsWith('Cancel')) {
-    const { id } = msg.from
-    const [text, chatId] = msg.data.split('==')
+    const { id } = msg.from;
+    const [text, chatId] = msg.data.split('==');
 
-    users = users.filter(v => v.id !== id)
-    sendLanguageMessage(chatId)
+    users = users.filter((v) => v.id !== id);
+    sendLanguageMessage(chatId);
   }
 });
 
@@ -204,28 +211,45 @@ function onPhoneSend(userId, phone) {
   }
 
   user.phone = phone;
-  const isInn = user.type === 'type3';
+  user.step = 'Region';
 
-  if (isInn) {
-    user.step = 'INN';
-    bot.sendMessage(user.chatId, chooseBtn[user.lang]['inn']);
-  } else {
-    user.step = 'Zayava';
-    bot.sendMessage(user.chatId, chooseBtn[user.lang]['zayava']);
-  }
+  const btns = [
+    'tash',
+    'tashObl',
+    'jizakh',
+    'sirdaryo',
+    'bukhoro',
+    'samarkand',
+    'navoi',
+    'namangan',
+    'andijan',
+    'fergana',
+    'qashq',
+    'surxan',
+    'qaraqalpok',
+    'khorezm',
+  ].map((v) => [{ text: regions[user.lang][v], callback_data: `Region==${v}` }]);
+
+  bot.sendMessage(user.chatId, chooseBtn[user.lang]['region'], {
+    reply_markup: JSON.stringify({
+      inline_keyboard: btns,
+    }),
+    parse_mode: 'Markdown',
+  });
 }
 
-function onInnSend(userId, inn) {
+
+function onRegionSend(userId, region) {
   const user = users.find((v) => v.id === userId);
 
-  user.inn = inn;
+  user.region = regions[user.lang][region];
   user.step = 'Zayava';
   bot.sendMessage(user.chatId, chooseBtn[user.lang]['zayava']);
 }
 
 function onZayavaSend(userId, zayava) {
   const user = users.find((v) => v.id === userId);
-  const { id, chatId, name, phone, inn, company, first_name, last_name, username, type, lang } = user;
+  const { id, chatId, name, phone, inn, company, first_name, region, last_name, username, type, lang } = user;
   user.zayava = zayava;
   user.step = 'Confirm';
 
@@ -241,8 +265,8 @@ ${username ? '@' + replaceSings(username) : ''}
 *${chooseFormTitle[lang]['date']}:* ${new Date().toLocaleString()}
 *${chooseFormTitle[lang]['company']}:* ${replaceSings(company)}
 *${chooseFormTitle[lang]['phone']}:* ${replaceSings(phone)}
+*${chooseFormTitle[lang]['region']}:* ${replaceSings(region)}
 *${chooseFormTitle[lang]['zayava']}:* ${replaceSings(zayava)}
-${inn ? `*${chooseFormTitle[lang]['inn']}*: ` + replaceSings(inn) : ''}
   `;
 
   bot.sendMessage(user.chatId, text, {
@@ -256,19 +280,19 @@ ${inn ? `*${chooseFormTitle[lang]['inn']}*: ` + replaceSings(inn) : ''}
 function onConfirm(userId) {
   const user = users.find((v) => v.id === userId);
   const zayavaId = getNewId();
-  const { id, chatId, name, phone, inn, company, zayava, first_name, last_name, username, type, lang } = user;
+  const { id, chatId, name, phone, inn, company, zayava, region, first_name, last_name, username, type, lang } = user;
 
-  zayavas.push({ id, zayavaId, chatId, name, phone, inn, company, zayava, first_name, last_name, username, type, lang });
+  zayavas.push({ id, zayavaId, chatId, name, phone, inn, region, company, zayava, first_name, last_name, username, type, lang });
   sendToAdmins(zayavaId);
   users = users.filter((v) => v.id !== id);
   bot.sendMessage(user.chatId, chooseBtn[user.lang]['lastMessage']);
-  sendLanguageMessage(chatId)
+  sendLanguageMessage(chatId);
 }
 
 function sendToAdmins(zayavaId) {
   const item = zayavas.find((v) => v.zayavaId === zayavaId);
 
-  const { id, chatId, name, phone, inn, company, zayava, first_name, last_name, username, type, lang } = item;
+  const { id, chatId, name, phone, inn, company, zayava, region, first_name, last_name, username, type, lang } = item;
   let text = '';
   text = `${username ? '@' + replaceSings(username) : ''}
   *Исм:* ${replaceSings(name)}
@@ -277,7 +301,8 @@ function sendToAdmins(zayavaId) {
 *Корхона:* ${replaceSings(company)}
 *Телефон:* ${replaceSings(phone)}
 *Мурожаат:* ${replaceSings(zayava)}
-${inn ? '*ИНН*: ' + replaceSings(inn) : ''}
+*Регион:* ${replaceSings(region)}
+
   `;
 
   const groupId = getChatIdByType(type);

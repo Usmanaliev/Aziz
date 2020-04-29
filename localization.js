@@ -33,6 +33,7 @@ const chooseBtn = {
     company: 'Tadbirkorlik subyekti nomi',
     lang: 'O’zbekcha',
     inn: 'STIR Raqam',
+    region: 'REGION UZ',
     phoneIncorrect: 'Telefon raqami noto\'g\'ri ko\'rsatildi. Iltimos telefon raqamingizni quyidagi ko\'rsatilgan shaklda yuboring: \n  +998901234567',
     zayava: 'Murojaatingizni batafsil ma’lumotlar bilan yoriting',
     nextBtn: 'Davom ettirish',
@@ -52,6 +53,7 @@ const chooseBtn = {
     toSite: 'Посетить вэб-сайт',
     company: 'Наименование субъекта предпринимательства',
     inn: 'ИНН компании',
+    region: 'REGION RU',
     phoneIncorrect: 'Номер телефона указан в неправильном формате. Пожалуйста напишите свой номер в нижеследующем формате:\n +998901234567',
     zayava: 'Напишите Ваше обращение с подробностями',
     lastMessage:
@@ -69,6 +71,7 @@ const chooseBtn = {
     toSite: 'Вэб-саҳифага ўтиш',
     company: 'Тадбиркорлик субъекти номини киритинг',
     inn: 'Корхона СТИР рақамини киритинг',
+    region: 'REGION UZVIR',
     phoneIncorrect: 'Телефон рақами нотўғри кўрсатилди. Илтимос телефон рақамингизни қуйидаги кўрсатилган шаклда юборинг: \n +998901234567',
     zayava: 'Мурожаатингизни батафсил маълумотлар билан ёритинг',
     lastMessage: 'Мурожаатингиз учун рахмат, Вакил девони инспекторларидан бири мурожаатингизни ўрганиб чиқиб сиз билан алоқа ўрнатади. \n Маълумот учун; дам олиш кунлари юборилган мурожаатлар юзасидан сизга иш кунлари (душанба-жума) давомида алоқага чиқишади',
@@ -87,7 +90,8 @@ const chooseFormTitle = {
     phone: 'Tel.',
     zayava: 'Mazmun',
     inn: 'STIR',
-    text: 'Sizning murojaatingiz'
+    text: 'Sizning murojaatingiz',
+    region: 'UZ REGION'
   },
   Ru: {
     name: 'Имя',
@@ -97,6 +101,7 @@ const chooseFormTitle = {
     phone: 'Тел.',
     zayava: 'Обращение',
     inn: 'ИНН',
+    region: 'RU REGION',
     text: 'Ваше обращение'
   },
   UzCir: {
@@ -107,8 +112,60 @@ const chooseFormTitle = {
     phone: 'Тел.',
     zayava: 'Мазмун',
     inn: 'СТИР',
+    region: 'UZCir REGION',
     text: 'Сизнинг мурожаатингиз'
   }
 }
 
-module.exports = { typeChoose, chooseInfo, chooseBtn, chooseFormTitle };
+const regions = {
+  Uz: {
+    tash: 'UZ TASH',
+    tashObl: 'UZ TASH OBL',
+    jizakh: 'UZ JIZ',
+    sirdaryo: 'UZ SIRDARYO',
+    bukhoro: 'UZ BUCH',
+    samarkand: 'UZ SAMSAR',
+    navoi: 'UZ AVOI',
+    namangan: 'UZ NAMANGAN',
+    andijan: 'UZ ANDIJA',
+    fergana: 'UZ FERGAAN',
+    qashq: 'UZ QASHAQ',
+    surxan: 'UZ SURXAN',
+    qaraqalpok: 'UZ QARA',
+    khorezm: 'UZ KHOREZM'
+  },
+  Ru: {
+    tash: 'Ru TASH',
+    tashObl: 'Ru TASH OBL',
+    jizakh: 'Ru JIZ',
+    sirdaryo: 'Ru SIRDARYO',
+    bukhoro: 'Ru BUCH',
+    samarkand: 'Ru SAMSAR',
+    navoi: 'Ru AVOI',
+    namangan: 'Ru NAMANGAN',
+    andijan: 'Ru ANDIJA',
+    fergana: 'Ru FERGAAN',
+    qashq: 'Ru QASHAQ',
+    surxan: 'Ru SURXAN',
+    qaraqalpok: 'Ru QARA',
+    khorezm: 'Ru KHOREZM'
+  },
+  UzCir: {
+    tash: 'UzCir TASH',
+    tashObl: 'UzCir TASH OBL',
+    jizakh: 'UzCir JIZ',
+    sirdaryo: 'UzCir SIRDARYO',
+    bukhoro: 'UzCir BUCH',
+    samarkand: 'UzCir SAMSAR',
+    navoi: 'UzCir AVOI',
+    namangan: 'UzCir NAMANGAN',
+    andijan: 'UzCir ANDIJA',
+    fergana: 'UzCir FERGAAN',
+    qashq: 'UzCir QASHAQ',
+    surxan: 'UzCir SURXAN',
+    qaraqalpok: 'UzCir QARA',
+    khorezm: 'UzCir KHOREZM'
+  }
+}
+
+module.exports = { typeChoose, chooseInfo, chooseBtn, chooseFormTitle, regions };
